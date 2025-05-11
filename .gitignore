@@ -2,3 +2,4 @@
 .idea
 prediText/Flask/datasets/auto_word_complete/*
 prediText/Flask/models/*
+prediText/Flask/secure_keys.py
