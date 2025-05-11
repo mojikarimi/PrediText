@@ -64,3 +64,15 @@ def translate():
                   'grammar_text': grammar_text}
         return render_template('main/index.html', result=result)
     return redirect(url_for('index'))
+
+
+
+def predi_word(sent, n, toker, model):
+    if sent.endswith(' '):
+        sent = sent.strip()
+    inpts = toker(sent, return_tensors="pt")
+    with torch.no_grad():
+        logits = torch.argsort(model(**inpts).logits[0, -1, :], descending=True)[:n]
+    sort_logits = torch.sort(logits)
+    pred_words = [toker.decode([idx]).strip() for idx in sort_logits.values]
+    return pred_words
