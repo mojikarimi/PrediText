@@ -7,7 +7,7 @@
 
 - 🌍 **Translation of sentences into five major world languages**
 - 📝 **Grammar correction using advanced AI models**
-    - English grammar is corrected using a **text-to-text transformer model** (e.g., T5 or similar).
+    - English grammar is corrected using a **text-to-text transformer model** (e.g., T5).
     - For other languages, grammar correction is performed via the **Sapling API**.
 - 🔤 **Smart word autocomplete while typing**
 - 🤖 **Next-word prediction using pre-trained GPT models**
