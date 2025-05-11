@@ -8,3 +8,13 @@ from sapling import SaplingClient
 
 bp = Blueprint('main', __name__)
 
+
+
+
+
+
+
+@bp.route('/')
+def index():
+    result = None
+    return render_template('main/index.html', result=result)
