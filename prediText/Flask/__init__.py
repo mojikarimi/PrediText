@@ -14,3 +14,6 @@ def create_app(test_config=None):
     except OSError:
         pass
 
+    from . import main,db
+    # db
+    db.init_app(app)
