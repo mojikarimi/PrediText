@@ -102,3 +102,72 @@ def suggestion():
         except IndexError:
             print('word is empty!')
         return jsonify(result=data)
+
+
+
+@bp.route('/next_word', methods=['POST'])
+def next_word():
+    if request.method == 'POST':
+        text = request.form.get('text')
+        orig_lang = request.form.get('orig_lang')
+        db = get_db()
+        data = None
+        split_text = text.split()
+        if len(split_text) > 1:
+            last_word = db.execute(
+                "SELECT * FROM words WHERE org_word=? AND lang=?"
+                , (split_text[-1], orig_lang,)
+            ).fetchone()
+            perv_word = db.execute(
+                "SELECT * FROM words WHERE org_word=? AND lang=?"
+                , (split_text[-2], orig_lang,)
+            ).fetchone()
+            if bool(last_word) is False:
+                db.execute(
+                    "INSERT INTO words(org_word,lang) VALUES (?,?)", (split_text[-1], orig_lang,)
+                )
+                db.commit()
+                if perv_word is not None:  # yadet bashe perv word bar aval ke zadi None bood
+                    if split_text[-1] not in eval(perv_word['next_words']):
+                        my_next_word = eval(perv_word['next_words'])
+                        my_next_word.append(split_text[-1])
+                        db.execute(
+                            "UPDATE words SET next_words=? WHERE words.id=?",
+                            (str(my_next_word), perv_word['id'],)
+                        )
+                        db.commit()
+                else:
+                    db.execute(
+                        "INSERT INTO words(org_word,next_words,lang) VALUES (?,?,?)",
+                        (split_text[-2], str([split_text[-1]]), orig_lang,)
+                    )
+                    db.commit()
+            else:
+                data = eval(last_word['next_words'])
+        else:
+            my_word = db.execute(
+                "SELECT * FROM words WHERE org_word=? AND lang=?"
+                , (split_text[-1], orig_lang,)
+            ).fetchone()
+            if my_word is not None:
+                data = eval(my_word['next_words'])
+            else:
+                db.execute(
+                    "INSERT INTO words(org_word,lang) VALUES (?,?)", (split_text[-1], orig_lang,)
+                )
+                db.commit()
+        if data is None:
+            data = []
+        tok_mod = {
+            'en': (en_token, en_model),
+            'ru': (ru_token, ru_model),
+            'sv': (sv_token, sv_model),
+            'es': (es_token, es_model),
+            'fr': (fr_token, fr_model),
+            'de': (de_token, de_model),
+        }
+        if len(data) < 5:
+            data = predi_word(text, 10 - len(data), *tok_mod[orig_lang]) + data  # data is a list
+        else:
+            data = predi_word(text, 5, *tok_mod[orig_lang]) + data  # data is a list
+        return jsonify(result=data)
