@@ -55,13 +55,19 @@
       ```
 
     To verify the exact filenames and directory paths required for each model, refer to the **model loading section** in the `__init__.py` file.
-4. Run the application:
+4. Obtain an API key for grammar correction of non-English languages:
+
+    - Visit [sapling.ai](https://sapling.ai) and create an account.
+    - You can access a limited-duration API key (trial or development plan) as explained on their website.
+    - After getting your API key, replace the placeholder `sap_api_key` in the `grammar_check` function with your actual key.
+5. Run the application:
     ```bash
    cd PrediText
+   flask --app Flask init-db
    flask --app Flask run
     ```
 
-5. Open your browser and go to `http://localhost:5000`.
+6. Open your browser and go to `http://localhost:5000`.
 
 
 ## License
