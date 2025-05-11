@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="Free Open Source Face Mask Detection using Python">
+    <meta name="author" content="Mojtaba Karimi - https://github.com/mojikarimi">
+    <title>PrediText</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+          rel="stylesheet">
+    <!-- Font Awesome CSS -->
+    <link href="{{ url_for('static', filename='Plugins/fontawesome/css/all.css') }}" rel="stylesheet">
+    <!-- Material CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.4.95/css/materialdesignicons.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="{{ url_for('static', filename='Styles/FMD.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='Styles/main.css' ) }}" rel="stylesheet">
+    <!--  icon   -->
+    <link href="{{ url_for('static', filename='Images/icon.png') }}" rel="icon">
+</head>
+<body id="page-top">
+
+<!-- Page Wrapper -->
+<div id="wrapper">
+    <!-- Sidebar -->
+    <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="#">
+            <div class="sidebar-brand-icon">
+                <img src="{{ url_for('static', filename='Images/logo2.png') }}" class="sidebar-logo"
+                     style="width: 80px;">
+            </div>
+        </a>
+
+    </ul>
+    <!-- End of Sidebar -->
+
+    {% block content %}
+    {% endblock %}
+</div>
+<!-- End of Page Wrapper -->
+
+<!-- JQuery JS -->
+<script src="{{ url_for('static',filename='Plugins/jquery/jquery.js ') }}"></script>
+<script src="{{ url_for('static',filename='Plugins/bootstrap/bundle.js') }}"></script>
+<!-- Custom JS -->
+<script src="{{ url_for('static',filename='Scripts/FMD.js') }}"></script>
+<script>
+    function check() {
+        const orig_lang = document.getElementById('orig_lang')
+        const translate_lang = document.getElementById('translate_lang')
+        const text1 = document.getElementById('text1')
+        const sugs = document.getElementById('sug')
+        if (orig_lang.value === '' || translate_lang.value === '') {
+            alert('Pleas select languages!')
+            text1.value = ''
+        } else {
+            if (text1.value.endsWith(' ')) {
+                $.ajax({
+                    method: 'POST',
+                    url: {{ url_for('main.next_word') | tojson }},
+                    data:{'text':text1.value,
+                          'orig_lang':orig_lang.value,
+                          'translate_lang':translate_lang.value},
+                success: function (data) {
+                    if (data.result) {
+                        sugs.replaceChildren()
+                        for (const i in data.result) {
+                            const a_tag = document.createElement('a')
+                            a_tag.setAttribute('class', 'badge badge-secondary m-2')
+                            a_tag.setAttribute('href', `javascript:set('${data.result[i]}')`)
+                            a_tag.text = data.result[i]
+                            sugs.appendChild(a_tag)
+                        }
+                    }
+                }
+            })
+
+            } else {
+                $.ajax({
+                    method: 'POST',
+                    url: {{ url_for('main.suggestion') | tojson }},
+                    data:{'text':text1.value,
+                          'orig_lang':orig_lang.value,
+                          'translate_lang':translate_lang.value},
+                success: function (data) {
+                    if (data.result) {
+                        sugs.replaceChildren()
+                        for (const i in data.result) {
+                            const a_tag = document.createElement('a')
+                            a_tag.setAttribute('class', 'badge badge-secondary m-2')
+                            a_tag.setAttribute('href', `javascript:set('${data.result[i]}')`)
+                            a_tag.text = data.result[i]
+                            sugs.appendChild(a_tag)
+                        }
+                    }
+                }
+            })
+            }
+        }
+
+    }
+
+    function set(element) {
+        const text = document.getElementById('text1')
+        const words = text.value.split(" ")
+        words.length = words.length - 1
+
+        if (words.length === 0) {
+            text.value = element + ' '
+        } else {
+            text.value = words.join(' ') + ' ' + element + ' '
+        }
+        check();
+    }
+</script>
+
+</body>
+
+</html>

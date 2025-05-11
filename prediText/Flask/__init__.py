@@ -17,3 +17,4 @@ def create_app(test_config=None):
     from . import main,db
     # db
     db.init_app(app)
+    # main

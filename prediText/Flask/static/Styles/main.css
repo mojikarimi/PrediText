@@ -1,0 +1,17 @@
+.button-flash{
+    background: none;
+    padding: 0px;
+    border: none
+}
+.icon-flash{
+    color: #6B6D7D;
+}
+.icon-flash:hover{
+    background: -moz-linear-gradient(180deg, #00030F 20%, #6F141C 60%);
+    background: -webkit-linear-gradient(180deg, #00030F 20%, #6F141C 60%);
+    background: linear-gradient(180deg, #00030F 20%, #6F141C 60%);
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
