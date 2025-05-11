@@ -1,0 +1,8 @@
+DROP TABLE IF EXISTS words;
+
+CREATE TABLE words(
+id INTEGER PRIMARY KEY AUTOINCREMENT,
+org_word TEXT,
+next_words TEXT DEFAULT '[]',
+lang VARCHAR(10)
+);
