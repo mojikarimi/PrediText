@@ -1,5 +1,5 @@
 .venv
 .idea
-prediText/Flask/datasets/auto_word_complete/*
-prediText/Flask/models/*
-prediText/Flask/secure_keys.py
+PrediText/Flask/datasets/auto_word_complete/*
+PrediText/Flask/models/*
+PrediText/Flask/secure_keys.py
