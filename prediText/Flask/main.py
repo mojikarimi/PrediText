@@ -76,3 +76,29 @@ def predi_word(sent, n, toker, model):
     sort_logits = torch.sort(logits)
     pred_words = [toker.decode([idx]).strip() for idx in sort_logits.values]
     return pred_words
+
+
+@bp.route('/suggestion', methods=["POST"])
+def suggestion():
+    if request.method == 'POST':
+        text = request.form.get('text')
+        orig_lang = request.form.get('orig_lang')
+        data = None
+        try:
+            words = text.split()
+            word = words[-1]
+            lang = {
+                'en': english_words,
+                'ru': russian_words,
+                'sv': swedish_words,
+                'es': spanish_words,
+                'fr': french_words,
+                'de': german_words,
+            }
+            sug_word = [i for i in difflib.get_close_matches(word, lang[orig_lang], 1000) if i.startswith(word)]
+            if len(sug_word) > 10:
+                sug_word = sug_word[:10]
+            data = sug_word
+        except IndexError:
+            print('word is empty!')
+        return jsonify(result=data)
