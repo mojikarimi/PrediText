@@ -1,19 +1,13 @@
 from copy import copy
 from flask import Blueprint, request, render_template, redirect, url_for, jsonify
 import translators as ts
-from .db import get_db
+from Flask.db import get_db
 import difflib
 import torch
 from sapling import SaplingClient
 from .secure_keys import sap_api_key
 
 bp = Blueprint('main', __name__)
-
-
-
-
-
-
 
 @bp.route('/')
 def index():
@@ -23,7 +17,10 @@ def index():
 
 def grammar_check(text, lang):
     client = SaplingClient(api_key=sap_api_key)
+    print(client,'wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww')
     edits = client.edits(f'{text}', lang=lang, session_id="test_session")
+    print(edits,'wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww')
+
     gt = copy(text)
     if not edits['edits']:
         return text + 'ok shod'
@@ -39,7 +36,7 @@ def translate():
         text = request.form['text']
         translate_language = request.form['translate_language']
         orig_language = request.form['orig_language']
-        if orig_language in ['de', 'es', 'fr', 'sv','en']:
+        if orig_language in ['de', 'es', 'fr', 'sv']:
             c = [text]
             while True:
                 grammar_text = grammar_check(c[-1], orig_language)
@@ -47,8 +44,8 @@ def translate():
                     break
                 c.append(grammar_text)
             grammar_text = c[-1]
-        # if orig_language == 'en':
-        #     grammar_text = happy_tt.generate_text(f"grammar: {text}", args=args).text
+        if orig_language == 'en':
+            grammar_text = happy_tt.generate_text(f"grammar: {text}", args=args).text
         if orig_language == 'ru':
             translate_text = ts.translate_text(text, from_language=orig_language, to_language=translate_language)
             grammar_text = ts.translate_text(translate_text, from_language=translate_language,
