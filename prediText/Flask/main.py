@@ -17,10 +17,7 @@ def index():
 
 def grammar_check(text, lang):
     client = SaplingClient(api_key=sap_api_key)
-    print(client,'wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww')
     edits = client.edits(f'{text}', lang=lang, session_id="test_session")
-    print(edits,'wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww')
-
     gt = copy(text)
     if not edits['edits']:
         return text + 'ok shod'
@@ -77,7 +74,10 @@ def predi_word(sent, n, toker, model):
 
 @bp.route('/suggestion', methods=["POST"])
 def suggestion():
+    print('44444444444444444444444444444444444444444444444444444444')
     if request.method == 'POST':
+        print('555555555555555555555555555555555555555555555555555')
+
         text = request.form.get('text')
         orig_lang = request.form.get('orig_lang')
         data = None
@@ -104,7 +104,11 @@ def suggestion():
 
 @bp.route('/next_word', methods=['POST'])
 def next_word():
+    print('222222222222222222222222222222222222222222222222')
+
     if request.method == 'POST':
+        print('1111111111111111111111111111111111111111111')
+
         text = request.form.get('text')
         orig_lang = request.form.get('orig_lang')
         db = get_db()

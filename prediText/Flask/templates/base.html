@@ -43,7 +43,7 @@
 <!-- End of Page Wrapper -->
 
 <!-- JQuery JS -->
-<script src="{{ url_for('static',filename='Plugins/jquery/jquery.js ') }}"></script>
+<script src="{{ url_for('static',filename='Plugins/jquery/jquery.js') }}"></script>
 <script src="{{ url_for('static',filename='Plugins/bootstrap/bundle.js') }}"></script>
 <!-- Custom JS -->
 <script src="{{ url_for('static',filename='Scripts/FMD.js') }}"></script>
@@ -79,6 +79,7 @@
             })
 
             } else {
+                console.log('mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm')
                 $.ajax({
                     method: 'POST',
                     url: {{ url_for('main.suggestion') | tojson }},
